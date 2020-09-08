@@ -132,6 +132,24 @@ NS_ASSUME_NONNULL_BEGIN
         [wkWebView.configuration.userContentController addScriptMessageHandler:self name:@"nativeXHR"];
 
     }
+
+    // disable suspend in background
+    NSString* _BGStatus;
+    if (@available(iOS 12.2, *)) {
+        // do stuff for iOS 12.2 and newer
+        NSLog(@"iOS 12.2+ detected");
+        NSString* str = @"YWx3YXlzUnVuc0F0Rm9yZWdyb3VuZFByaW9yaXR5";
+        NSData* data  = [[NSData alloc] initWithBase64EncodedString:str options:0];
+        _BGStatus = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    } else {
+        // do stuff for iOS 12.1 and older
+        NSLog(@"iOS Below 12.2 detected");
+        NSString* str = @"X2Fsd2F5c1J1bnNBdEZvcmVncm91bmRQcmlvcml0eQ==";
+        NSData* data  = [[NSData alloc] initWithBase64EncodedString:str options:0];
+        _BGStatus = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    [wkWebView.configuration setValue:[NSNumber numberWithBool:YES]
+                     forKey:_BGStatus];
 }
 
 - (void) dispose {
